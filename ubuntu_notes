@@ -1,0 +1,7 @@
+sudo apt install git
+sudo apt install nfs-kernel-server
+sudo systemctl start nfs-kernel-server.service
+
+sudo apt-get install openssh-server
+sudo service ssh status
+sudo apt-get install autofs

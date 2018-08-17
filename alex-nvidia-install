@@ -1,0 +1,15 @@
+dnf install kernel-devel kernel-headers gcc dkms acpid
+echo "blacklist nouveau" >> /etc/modprobe.d/blacklist.conf
+GRUB_CMDLINE_LINUX="rd.lvm.lv=fedora/swap rd.lvm.lv=fedora/root rhgb quiet rd.driver.blacklist=nouveau"
+grub2-mkconfig -o /boot/grub2/grub.cfg
+grub2-mkconfig -o /boot/efi/EFI/fedora/grub.cfg
+dnf remove xorg-x11-drv-nouveau
+yum remove xorg-x11-drv-nouveau
+# check  /etc/dnf/dnf.conf and remove "exclude=xorg-x11*"
+## Backup old initramfs nouveau image ##
+mv /boot/initramfs-$(uname -r).img /boot/initramfs-$(uname -r)-nouveau.img
+## Create new initramfs image ##
+dracut /boot/initramfs-$(uname -r).img $(uname -r)
+systemctl set-default multi-user.target
+reboot
+
